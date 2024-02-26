@@ -109,24 +109,31 @@ $start_index = ($page - 1) * $results_per_page;
               <select class="form-select">
                 <option selected disabled>Chọn khóa học</option>
                 <?php
-                                // Tạo dữ liệu cho các tùy chọn của khóa học với khoảng cách là 1 năm
-                                for ($year = 2000; $year <= 2022; $year++) {
-                                    $nextYear = $year + 1;
-                                    echo "<option>$year-$nextYear</option>";
-                                }
-                                ?>
+                // Tạo dữ liệu cho các tùy chọn của khóa học với khoảng cách là 1 năm
+                for ($year = 2000; $year <= 2022; $year++) {
+                    $nextYear = $year + 1;
+                    echo "<option>$year-$nextYear</option>";
+                }
+                ?>
               </select>
             </div>
             <div class="col-md-3">
-              <select class="form-select">
+              <select class="form-select" name="lop_hoc">
                 <option selected disabled>Chọn lớp học</option>
-                <!-- Thêm các option từ database -->
+                <!-- Truy vấn cơ sở dữ liệu để lấy tên các lớp học -->
                 <?php
-                                // Tạo dữ liệu giả lập cho các tùy chọn của lớp học
-                                for ($class = 1; $class <= 5; $class++) {
-                                    echo "<option>Lớp $class</option>";
-                                }
-                                ?>
+                $sql_lop = "SELECT * FROM lophoc";
+                $result_lop = $connection->query($sql_lop);
+
+                // Kiểm tra kết quả và tạo các option cho select
+                if ($result_lop->num_rows > 0) {
+                    while ($row_lop = $result_lop->fetch_assoc()) {
+                        echo "<option value='" . $row_lop['id'] . "'>" . $row_lop['tenLop'] . "</option>";
+                    }
+                } else {
+                    echo "<option disabled>Không có lớp học</option>";
+                }
+                ?>
               </select>
             </div>
             <div class="col-md-3">
@@ -167,49 +174,49 @@ $start_index = ($page - 1) * $results_per_page;
             </thead>
             <tbody>
               <?php
-                            // Đọc dữ liệu từ ba bảng bằng cách sử dụng câu truy vấn JOIN
-                            $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
-                            sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
-                            sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
-                            FROM sinhvien
-                            JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
-                            JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
-                            LIMIT $start_index, $results_per_page";
-                            $result = $connection->query($sql);
+                // Đọc dữ liệu từ ba bảng bằng cách sử dụng câu truy vấn JOIN
+                $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
+                        sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
+                        sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
+                        FROM sinhvien
+                        JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
+                        JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
+                        LIMIT $start_index, $results_per_page";
+                $result = $connection->query($sql);
 
-                            if ($result->num_rows > 0) {
-                                // Đọc dữ liệu của mỗi hàng
-                                while ($row = $result->fetch_assoc()) {
-                                    echo "
-                                    <tr>
-                                        <td>{$row['sinhvien_id']}</td>
-                                        <td>{$row['lophoc_id']}</td>
-                                        <td>{$row['sinhvien_ten']}</td>
-                                        <td>{$row['ngaySinh']}</td>
-                                        <td>{$row['gioiTinh']}</td>
-                                        <td>{$row['chieuCao']}</td>
-                                        <td>{$row['canNang']}</td>
-                                        <td>{$row['queQuan']}</td>
-                                        <td>{$row['diemThiDauVao']}</td>
-                                        <td>{$row['tenLop']}</td>
-                                        <td>{$row['namBatDau']}</td>
-                                    </tr>
-                                    ";
-                                }
-                            } else {
-                                echo "<tr><td colspan='11'>No data available</td></tr>";
-                            }
-                            ?>
+                if ($result->num_rows > 0) {
+                    // Đọc dữ liệu của mỗi hàng
+                    while ($row = $result->fetch_assoc()) {
+                        echo "
+                            <tr>
+                                <td>{$row['sinhvien_id']}</td>
+                                <td>{$row['lophoc_id']}</td>
+                                <td>{$row['sinhvien_ten']}</td>
+                                <td>{$row['ngaySinh']}</td>
+                                <td>{$row['gioiTinh']}</td>
+                                <td>{$row['chieuCao']}</td>
+                                <td>{$row['canNang']}</td>
+                                <td>{$row['queQuan']}</td>
+                                <td>{$row['diemThiDauVao']}</td>
+                                <td>{$row['tenLop']}</td>
+                                <td>{$row['namBatDau']}</td>
+                            </tr>
+                            ";
+                    }
+                } else {
+                    echo "<tr><td colspan='11'>No data available</td></tr>";
+                }
+                ?>
             </tbody>
           </table>
         </div>
         <!-- Hiển thị phân trang -->
         <div class="text-center">
           <?php
-                    for ($page = 1; $page <= $total_pages; $page++) {
-                        echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
-                    }
-                    ?>
+            for ($page = 1; $page <= $total_pages; $page++) {
+                echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
+            }
+            ?>
         </div>
       </div>
     </div>
