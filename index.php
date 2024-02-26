@@ -99,6 +99,7 @@
 
     // Xác định vị trí bắt đầu và kết thúc của kết quả trên trang hiện tại
     $start_index = ($page - 1) * $results_per_page;
+
     ?>
   <div class="container-lg mt-4">
     <div class="card">
@@ -144,7 +145,7 @@
                 <option selected disabled>Chọn giới tính</option>
                 <option>Nam</option>
                 <option>Nữ</option>
-                <option>Khác</option>
+                <!-- <option>Khác</option> -->
               </select>
             </div>
             <div class="col-md-3">
@@ -196,11 +197,20 @@
               <?php
                             // Xác định điều kiện lọc
                             $filter_year = isset($_GET['nam_bat_dau']) ? $_GET['nam_bat_dau'] : '';
+                            $filter_class = isset($_GET['lop_hoc']) ? $_GET['lop_hoc'] : '';
 
                             // Thêm điều kiện lọc vào câu truy vấn SQL nếu có
                             $filter_condition = "";
                             if (!empty($filter_year)) {
                                 $filter_condition = " WHERE khoahoc.namBatDau = '$filter_year'";
+                            }
+                            if (!empty($filter_class)) {
+                                if (!empty($filter_condition)) {
+                                    $filter_condition .= " AND ";
+                                } else {
+                                    $filter_condition = " WHERE ";
+                                }
+                                $filter_condition .= "lophoc.id = '$filter_class'";
                             }
 
                             // Cập nhật câu truy vấn SQL để áp dụng bộ lọc
