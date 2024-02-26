@@ -13,6 +13,24 @@ if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
 
+// Khai báo biến
+$results_per_page = 10;
+
+// Tính toán số trang
+$sql = "SELECT COUNT(*) AS total FROM sinhvien";
+$result = $connection->query($sql);
+$row = $result->fetch_assoc();
+$total_pages = ceil($row["total"] / $results_per_page);
+
+// Xác định trang hiện tại
+if (!isset($_GET['page'])) {
+    $page = 1;
+} else {
+    $page = $_GET['page'];
+}
+
+// Xác định vị trí bắt đầu và kết thúc của kết quả trên trang hiện tại
+$start_index = ($page - 1) * $results_per_page;
 
 ?>
 
@@ -155,7 +173,8 @@ if ($connection->connect_error) {
                         sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
                         FROM sinhvien
                         JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
-                        JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id";
+                        JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
+                        LIMIT $start_index, $results_per_page";
                 $result = $connection->query($sql);
 
                 if ($result->num_rows > 0) {
@@ -183,6 +202,14 @@ if ($connection->connect_error) {
                 ?>
             </tbody>
           </table>
+        </div>
+        <!-- Hiển thị phân trang -->
+        <div class="text-center">
+          <?php
+          for ($page = 1; $page <= $total_pages; $page++) {
+              echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
+          }
+          ?>
         </div>
       </div>
     </div>
