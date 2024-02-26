@@ -1,38 +1,3 @@
-<?php
-// Kết nối đến cơ sở dữ liệu
-$servername = "localhost";
-$username = "root";
-$password = "";
-$database = "student1";
-
-// Tạo kết nối
-$connection = new mysqli($servername, $username, $password, $database);
-
-// Kiểm tra kết nối
-if ($connection->connect_error) {
-    die("Connection failed: " . $connection->connect_error);
-}
-
-// Khai báo biến
-$results_per_page = 10;
-
-// Tính toán số trang
-$sql = "SELECT COUNT(*) AS total FROM sinhvien";
-$result = $connection->query($sql);
-$row = $result->fetch_assoc();
-$total_pages = ceil($row["total"] / $results_per_page);
-
-// Xác định trang hiện tại
-if (!isset($_GET['page'])) {
-    $page = 1;
-} else {
-    $page = $_GET['page'];
-}
-
-// Xác định vị trí bắt đầu và kết thúc của kết quả trên trang hiện tại
-$start_index = ($page - 1) * $results_per_page;
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -93,10 +58,48 @@ $start_index = ($page - 1) * $results_per_page;
     border-radius: 15px;
     overflow: hidden;
   }
+
+  .form-select1 {
+    display: none;
+  }
   </style>
 </head>
 
 <body>
+  <?php
+    // Kết nối đến cơ sở dữ liệu
+    $servername = "localhost";
+    $username = "root";
+    $password = "";
+    $database = "student1";
+
+    // Tạo kết nối
+    $connection = new mysqli($servername, $username, $password, $database);
+
+    // Kiểm tra kết nối
+    if ($connection->connect_error) {
+        die("Connection failed: " . $connection->connect_error);
+    }
+
+    // Khai báo biến
+    $results_per_page = 10;
+
+    // Tính toán số trang
+    $sql = "SELECT COUNT(*) AS total FROM sinhvien";
+    $result = $connection->query($sql);
+    $row = $result->fetch_assoc();
+    $total_pages = ceil($row["total"] / $results_per_page);
+
+    // Xác định trang hiện tại
+    if (!isset($_GET['page'])) {
+        $page = 1;
+    } else {
+        $page = $_GET['page'];
+    }
+
+    // Xác định vị trí bắt đầu và kết thúc của kết quả trên trang hiện tại
+    $start_index = ($page - 1) * $results_per_page;
+    ?>
   <div class="container-lg mt-4">
     <div class="card">
       <div class="card-header">
@@ -106,34 +109,34 @@ $start_index = ($page - 1) * $results_per_page;
         <form>
           <div class="row mb-3">
             <div class="col-md-3">
-              <select class="form-select">
+              <select class="form-select" id="khoa_hoc_select">
                 <option selected disabled>Chọn khóa học</option>
                 <?php
-                // Tạo dữ liệu cho các tùy chọn của khóa học với khoảng cách là 1 năm
-                for ($year = 2000; $year <= 2022; $year++) {
-                    $nextYear = $year + 1;
-                    echo "<option>$year-$nextYear</option>";
-                }
-                ?>
+                                // Tạo dữ liệu cho các tùy chọn của khóa học với mỗi option đại diện cho một khoảng 4 năm
+                                for ($year = 2000; $year <= 2022; $year++) {
+                                    $nextFourYear = $year + 3; // Tính năm kết thúc là 4 năm sau năm bắt đầu
+                                    echo "<option value='$year'>$year-$nextFourYear</option>";
+                                }
+                                ?>
               </select>
             </div>
             <div class="col-md-3">
-              <select class="form-select" name="lop_hoc">
+              <select class="form-select" name="lop_hoc" id="lop_hoc_select">
                 <option selected disabled>Chọn lớp học</option>
                 <!-- Truy vấn cơ sở dữ liệu để lấy tên các lớp học -->
                 <?php
-                $sql_lop = "SELECT * FROM lophoc";
-                $result_lop = $connection->query($sql_lop);
+                                $sql_lop = "SELECT * FROM lophoc";
+                                $result_lop = $connection->query($sql_lop);
 
-                // Kiểm tra kết quả và tạo các option cho select
-                if ($result_lop->num_rows > 0) {
-                    while ($row_lop = $result_lop->fetch_assoc()) {
-                        echo "<option value='" . $row_lop['id'] . "'>" . $row_lop['tenLop'] . "</option>";
-                    }
-                } else {
-                    echo "<option disabled>Không có lớp học</option>";
-                }
-                ?>
+                                // Kiểm tra kết quả và tạo các option cho select
+                                if ($result_lop->num_rows > 0) {
+                                    while ($row_lop = $result_lop->fetch_assoc()) {
+                                        echo "<option value='" . $row_lop['id'] . "'>" . $row_lop['tenLop'] . "</option>";
+                                    }
+                                } else {
+                                    echo "<option disabled>Không có lớp học</option>";
+                                }
+                                ?>
               </select>
             </div>
             <div class="col-md-3">
@@ -145,7 +148,24 @@ $start_index = ($page - 1) * $results_per_page;
               </select>
             </div>
             <div class="col-md-3">
-              <input type="text" class="form-control" placeholder="Nhập điểm thi đầu vào">
+              <div class="col-md-3">
+                <label for="diem_thi">Chọn điểm thi:</label>
+                <input type="range" class="form-range" min="0" max="10" step="0.5" id="diem_thi" name="diem_thi">
+              </div>
+
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <select class="form-select form-select1" name="nam_bat_dau">
+                <option selected disabled>Chọn năm bắt đầu</option>
+                <?php
+                                // Tạo các tùy chọn cho năm bắt đầu từ 2000 đến 2022
+                                for ($year = 2000; $year <= 2022; $year++) {
+                                    echo "<option>$year</option>";
+                                }
+                                ?>
+              </select>
             </div>
           </div>
           <div class="row">
@@ -174,55 +194,78 @@ $start_index = ($page - 1) * $results_per_page;
             </thead>
             <tbody>
               <?php
-                // Đọc dữ liệu từ ba bảng bằng cách sử dụng câu truy vấn JOIN
-                $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
-                        sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
-                        sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
-                        FROM sinhvien
-                        JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
-                        JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
-                        LIMIT $start_index, $results_per_page";
-                $result = $connection->query($sql);
+                            // Xác định điều kiện lọc
+                            $filter_year = isset($_GET['nam_bat_dau']) ? $_GET['nam_bat_dau'] : '';
 
-                if ($result->num_rows > 0) {
-                    // Đọc dữ liệu của mỗi hàng
-                    while ($row = $result->fetch_assoc()) {
-                        echo "
-                            <tr>
-                                <td>{$row['sinhvien_id']}</td>
-                                <td>{$row['lophoc_id']}</td>
-                                <td>{$row['sinhvien_ten']}</td>
-                                <td>{$row['ngaySinh']}</td>
-                                <td>{$row['gioiTinh']}</td>
-                                <td>{$row['chieuCao']}</td>
-                                <td>{$row['canNang']}</td>
-                                <td>{$row['queQuan']}</td>
-                                <td>{$row['diemThiDauVao']}</td>
-                                <td>{$row['tenLop']}</td>
-                                <td>{$row['namBatDau']}</td>
-                            </tr>
-                            ";
-                    }
-                } else {
-                    echo "<tr><td colspan='11'>No data available</td></tr>";
-                }
-                ?>
+                            // Thêm điều kiện lọc vào câu truy vấn SQL nếu có
+                            $filter_condition = "";
+                            if (!empty($filter_year)) {
+                                $filter_condition = " WHERE khoahoc.namBatDau = '$filter_year'";
+                            }
+
+                            // Cập nhật câu truy vấn SQL để áp dụng bộ lọc
+                            $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
+                                    sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
+                                    sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
+                                    FROM sinhvien
+                                    JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
+                                    JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
+                                    $filter_condition
+                                    LIMIT $start_index, $results_per_page";
+                            $result = $connection->query($sql);
+
+                            if ($result->num_rows > 0) {
+                                // Đọc dữ liệu của mỗi hàng
+                                while ($row = $result->fetch_assoc()) {
+                                    echo "
+                                    <tr>
+                                        <td>{$row['sinhvien_id']}</td>
+                                        <td>{$row['lophoc_id']}</td>
+                                        <td>{$row['sinhvien_ten']}</td>
+                                        <td>{$row['ngaySinh']}</td>
+                                        <td>{$row['gioiTinh']}</td>
+                                        <td>{$row['chieuCao']}</td>
+                                        <td>{$row['canNang']}</td>
+                                        <td>{$row['queQuan']}</td>
+                                        <td>{$row['diemThiDauVao']}</td>
+                                        <td>{$row['tenLop']}</td>
+                                        <td>{$row['namBatDau']}</td>
+                                    </tr>
+                                    ";
+                                }
+                            } else {
+                                echo "<tr><td colspan='11'>No data available</td></tr>";
+                            }
+                            ?>
             </tbody>
           </table>
         </div>
         <!-- Hiển thị phân trang -->
         <div class="text-center">
           <?php
-            for ($page = 1; $page <= $total_pages; $page++) {
-                echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
-            }
-            ?>
+                    // Lấy các tham số lọc từ URL
+                    $filter_params = http_build_query($_GET);
+
+                    // Hiển thị các liên kết phân trang với các tham số lọc
+                    for ($page = 1; $page <= $total_pages; $page++) {
+                        echo "<a href='?page=$page&$filter_params' class='btn btn-primary'>$page</a> ";
+                    }
+                    ?>
         </div>
       </div>
     </div>
   </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+  // Lắng nghe sự kiện khi chọn option trong select "Chọn khóa học"
+  document.getElementById('khoa_hoc_select').addEventListener('change', function() {
+    // Lấy giá trị của option đã chọn
+    var selectedYear = this.value;
+    // Đặt giá trị của select "Năm bắt đầu" thành giá trị đã chọn
+    document.getElementsByName('nam_bat_dau')[0].value = selectedYear;
+  });
+  </script>
 </body>
 
 </html>
