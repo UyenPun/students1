@@ -1,48 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html>
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Range Slider</title>
-  <style>
-    /* Paste CSS Code Here */
-    /* Your CSS styles */
-  </style>
+    <title>Tính điểm thi đầu vào</title>
 </head>
-
 <body>
-
-  <!-- Paste HTML Code Here -->
-  <!-- Your HTML code -->
-
-  <div id="RangeSlider" class="range-slider">
-    <div>
-      <div class="range-slider-val-left"></div>
-      <div class="range-slider-val-right"></div>
-      <div class="range-slider-val-range"></div>
-
-      <span class="range-slider-handle range-slider-handle-left"></span>
-      <span class="range-slider-handle range-slider-handle-right"></span>
-
-      <div class="range-slider-tooltip range-slider-tooltip-left">
-        <span class="range-slider-tooltip-text"></span>
-      </div>
-
-      <div class="range-slider-tooltip range-slider-tooltip-right">
-        <span class="range-slider-tooltip-text"></span>
-      </div>
-    </div>
-
-    <input type="range" class="range-slider-input-left" tabindex="0" max="100" min="0" step="1">
-    <input type="range" class="range-slider-input-right" tabindex="0" max="100" min="0" step="1">
-  </div>
-
-  <script>
-    // Paste JavaScript Code Here
-    // Your JavaScript code
-  </script>
-
+    <h2>Nhập điểm thi và điểm khu vực</h2>
+    <form action="http://localhost/student1/process.php" method="post">
+        Điểm thi: <input type="text" name="diem_thi"><br>
+        Điểm khu vực: <input type="text" name="diem_khu_vuc"><br>
+        <input type="submit" value="Tính điểm">
+    </form>
 </body>
-
 </html>
