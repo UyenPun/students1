@@ -72,6 +72,10 @@
     display: inline-block;
     width: 140px;
   }
+
+  .form-group {
+    display: flex;
+  }
   </style>
 </head>
 
@@ -180,19 +184,24 @@ $start_index = ($page - 1) * $results_per_page;
             </div>
           </div>
           <div class="row">
-            <div class="col-md-12 text-center">
+            <div class="col-md-6">
               <button type="submit" class="btn btn-primary">Lọc</button>
-              <!-- <button type="button" class="btn btn-success" id="addButton">Add</button> -->
               <button type="submit" class="btn btn-primary">
                 <a href="http://localhost/student1/index.php">Reset</a>
               </button>
-              <form method="post" class="d-flex">
-                <input type="number" name="quantity" class="form-control me-2 form-btn" placeholder="Enter quantity"
-                  required>
-                <button type="submit" name="add_users" class="btn btn-primary">Add Users</button>
+            </div>
+            <div class="col-md-6">
+              <form id="myForm">
+                <div class="form-group">
+                  <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
+                    style="width: 100px">
+                  <button type=" submit" class="btn btn-primary">Gửi</button>
+                </div>
               </form>
             </div>
           </div>
+
+
         </form>
         <div class="table-responsive mt-4">
           <table class="table table-bordered table-striped">
