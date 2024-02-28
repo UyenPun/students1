@@ -114,6 +114,49 @@ if (!isset($_GET['page'])) {
 // Xác định vị trí bắt đầu và kết thúc của kết quả trên trang hiện tại
 $start_index = ($page - 1) * $results_per_page;
 
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['quantity'])) {
+  // Xử lý khi nút "Gửi" được nhấn
+  $quantity = $_POST['quantity'];
+
+  // Thực hiện thêm dữ liệu vào cơ sở dữ liệu dựa trên số lượng đã nhập
+  for ($i = 0; $i < $quantity; $i++) {
+      // Ví dụ: Thêm một bản ghi mới vào cơ sở dữ liệu, có thể thay đổi tùy theo cấu trúc bảng của bạn
+      $sql_insert = "INSERT INTO sinhvien (ten, ngaySinh, gioiTinh, chieuCao, canNang, queQuan, diemThiDauVao, idLopHoc)
+                      VALUES ('Tên Sinh viên', 'Ngày sinh', 'Giới tính', 'Chiều cao', 'Cân nặng', 'Quê quán', 'Điểm thi', 'ID lớp học')";
+      if ($connection->query($sql_insert) === TRUE) {
+          echo "Thêm dữ liệu thành công!";
+      } else {
+          echo "Lỗi: " . $connection->error;
+      }
+  }
+
+  // Tải lại trang để cập nhật bảng table với dữ liệu mới
+  echo "<meta http-equiv='refresh' content='0'>";
+
+
+// Xử lý xóa toàn bộ dữ liệu từ nhiều bảng
+if (isset($_GET['delete_all'])) {
+  $sql_delete_sinhvien = "TRUNCATE TABLE sinhvien";
+  $sql_delete_lophoc = "TRUNCATE TABLE lophoc";
+  $sql_delete_khoahoc = "TRUNCATE TABLE khoahoc";
+  // $sql_delete_sinhvien = "DELETE FROM sinhvien";
+  // $sql_delete_lophoc = "DELETE FROM lophoc";
+  // $sql_delete_khoahoc = "DELETE FROM khoahoc";
+
+  // Thực hiện các truy vấn xóa
+  if ($connection->query($sql_delete_sinhvien) === TRUE &&
+      $connection->query($sql_delete_lophoc) === TRUE &&
+      $connection->query($sql_delete_khoahoc) === TRUE) {
+      // Xóa thành công, chuyển hướng người dùng đến trang hiện tại
+      header("Location: " . $_SERVER['PHP_SELF']);
+      exit();
+  } else {
+      // Nếu có lỗi xảy ra trong quá trình xóa, hiển thị thông báo lỗi
+      echo "Error deleting record: " . $connection->error;
+  }
+}
+}
+
 ?>
   <div class="container-lg mt-4">
     <div class="card">
@@ -184,20 +227,23 @@ $start_index = ($page - 1) * $results_per_page;
             </div>
           </div>
           <div class="row">
-            <div class="col-md-6">
+            <div class="col-md-4">
               <button type="submit" class="btn btn-primary">Lọc</button>
               <button type="submit" class="btn btn-primary">
                 <a href="http://localhost/student1/index.php">Reset</a>
               </button>
             </div>
-            <div class="col-md-6">
+            <div class="col-md-4">
               <form id="myForm">
                 <div class="form-group">
                   <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
                     style="width: 100px">
-                  <button type=" submit" class="btn btn-primary">Gửi</button>
+                  <button type=" submit" class="btn btn-primary">Add</button>
                 </div>
               </form>
+            </div>
+            <div class="col-md-4">
+              <a href="?delete_all=true" class="btn btn-primary custom-gradient-4 ms-2" role="button">Delete All</a>
             </div>
           </div>
 
