@@ -16,6 +16,14 @@ if ($connection->connect_error) {
 // Danh sách các quê quán
 $addresses = array("Ha Noi", "Ho Chi Minh", "Da Nang", "Hue", "Can Tho", "Hai Phong", "Nha Trang", "Vung Tau", "Ha Noi", "Hai Phong", "Quang Ninh", "Lao Cai", "Lai Chau", "Yen Bai", "Dien Bien", "Son La", "Hoa Binh", "Ha Giang", "Cao Bang", "Bac Kan", "Lang Son", "Tuyen Quang", "Thai Nguyen", "Phu Tho", "Bac Giang", "Quang Ninh", "Bac Ninh", "Ha Nam", "Hai Duong", "Hung Yen", "Nam Dinh", "Thai Binh", "Vinh Phuc", "Nghe An", "Thanh Hoa", "Ha Tinh", "Quang Binh", "Quang Tri", "Thua Thien Hue", "Quang Nam", "Quang Ngai", "Binh Dinh", "Phu Yen", "Khanh Hoa", "Ninh Thuan", "Binh Thuan", "Kon Tum", "Gia Lai", "Dak Lak", "Dak Nong", "Lam Dong", " Da Nang", "Binh Duong", "Binh Phuoc", "Tay Ninh", "Ba Ria – Vung Tau", "Dong Nai", "Long An", "Tien Giang", "Ben Tre", "Vinh Long", "Tra Vinh", "Dong Thap", "Hau Giang", "An Giang", "Kien Giang", "Bac Lieu", "Soc Trang", "Ca Mau");
 
+// Hàm để tạo tên ngẫu nhiên
+function generateRandomName()
+{
+    $ten = array("Ngoc Ha", "Xuan Lan", "Huu Huy", "Manh Cuong", "Lan Huong", "Phuong Linh", "Ngoc Minh", "Kim Ngan", "Minh Tu", "Phuong Minh", "Phuong Anh", "Pham Hang", "Phuong Uyen", "My Linh", "Xuan Mai", "Thien Kim","Bao Chau","Phuong Oanh");
+    return $ten[array_rand($ten)];
+}
+
+
 // Tạo thông tin khóa học, lớp, và sinh viên
 for ($year = 2000; $year <= 2023; $year++) {
     // Thêm thông tin khóa học
@@ -42,7 +50,8 @@ for ($year = 2000; $year <= 2023; $year++) {
 
         for ($j = 1; $j <= $num_students; $j++) {
             // Tạo thông tin sinh viên ngẫu nhiên
-            $ten = "Sinh viên " . $j;
+            $ten = generateRandomName();
+            $idLopHoc = rand(1, 10);
             $ngay_sinh = date('Y-m-d', strtotime("-" . rand(18, 28) . " years", strtotime($year . "-01-01")));
             $gioi_tinh = rand(0, 1) ? 'Nam' : 'Nữ';
             $chieu_cao = rand(150, 190); // Chieu cao tu 1.5m den 1.9m
@@ -56,7 +65,7 @@ for ($year = 2000; $year <= 2023; $year++) {
 
             // Thêm thông tin sinh viên
             $sql_insert_sinh_vien = "INSERT INTO sinhvien (idLopHoc, diemThi, diemKhuVuc, ten, ngaySinh, gioiTinh, chieuCao, canNang, queQuan, diemThiDauVao)
-                                    VALUES ('$lop_hoc_id', '$diem_thi', '$diem_khu_vuc', '$ten', '$ngay_sinh', '$gioi_tinh', '$chieu_cao', '$can_nang', '$que_quan', '$diem_thi_dau_vao')";
+                                    VALUES ('$idLopHoc', '$diem_thi', '$diem_khu_vuc', '$ten', '$ngay_sinh', '$gioi_tinh', '$chieu_cao', '$can_nang', '$que_quan', '$diem_thi_dau_vao')";
             $connection->query($sql_insert_sinh_vien);
         }
     }
