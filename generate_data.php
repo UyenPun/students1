@@ -13,16 +13,15 @@ if ($connection->connect_error) {
     die("Connection failed: " . $connection->connect_error);
 }
 
-// Danh sách các quê quán
-$addresses = array("Ha Noi", "Ho Chi Minh", "Da Nang", "Hue", "Can Tho", "Hai Phong", "Nha Trang", "Vung Tau", "Ha Noi", "Hai Phong", "Quang Ninh", "Lao Cai", "Lai Chau", "Yen Bai", "Dien Bien", "Son La", "Hoa Binh", "Ha Giang", "Cao Bang", "Bac Kan", "Lang Son", "Tuyen Quang", "Thai Nguyen", "Phu Tho", "Bac Giang", "Quang Ninh", "Bac Ninh", "Ha Nam", "Hai Duong", "Hung Yen", "Nam Dinh", "Thai Binh", "Vinh Phuc", "Nghe An", "Thanh Hoa", "Ha Tinh", "Quang Binh", "Quang Tri", "Thua Thien Hue", "Quang Nam", "Quang Ngai", "Binh Dinh", "Phu Yen", "Khanh Hoa", "Ninh Thuan", "Binh Thuan", "Kon Tum", "Gia Lai", "Dak Lak", "Dak Nong", "Lam Dong", " Da Nang", "Binh Duong", "Binh Phuoc", "Tay Ninh", "Ba Ria – Vung Tau", "Dong Nai", "Long An", "Tien Giang", "Ben Tre", "Vinh Long", "Tra Vinh", "Dong Thap", "Hau Giang", "An Giang", "Kien Giang", "Bac Lieu", "Soc Trang", "Ca Mau");
+// Hằng số xác định số lượng sinh viên cho mỗi lớp học
+define("STUDENTS_PER_CLASS", 40);
 
 // Hàm để tạo tên ngẫu nhiên
 function generateRandomName()
 {
-    $ten = array("Ngoc Ha", "Xuan Lan", "Huu Huy", "Manh Cuong", "Lan Huong", "Phuong Linh", "Ngoc Minh", "Kim Ngan", "Minh Tu", "Phuong Minh", "Phuong Anh", "Pham Hang", "Phuong Uyen", "My Linh", "Xuan Mai", "Thien Kim","Bao Chau","Phuong Oanh");
+    $ten = array("Ngoc Ha", "Xuan Lan", "Huu Huy", "Manh Cuong", "Lan Huong", "Phuong Linh", "Ngoc Minh", "Kim Ngan", "Minh Tu", "Phuong Minh", "Phuong Anh", "Pham Hang", "Phuong Uyen", "My Linh", "Xuan Mai", "Thien Kim","Bao Chau","Phuong Oanh", "Long Giang", "Hau Giang", "Ha Vy", "Ky Duyen", "Minh Trieu", "Anh Dao", "My Uyen", "Le Quyn", "Ngo Quyen", "Le Hoan", "Quoc Tuan","Đang Dung", "Pham Tuan", "Viet Anh", "Thai Quy", "Anh Vien", "Diem Phuc", " My Da");
     return $ten[array_rand($ten)];
 }
-
 
 // Tạo thông tin khóa học, lớp, và sinh viên
 for ($year = 2000; $year <= 2023; $year++) {
@@ -45,12 +44,13 @@ for ($year = 2000; $year <= 2023; $year++) {
         // Lấy ID của lớp học vừa thêm
         $lop_hoc_id = $connection->insert_id;
 
-        // Số sinh viên trong mỗi lớp (từ 30 đến 50)
-        $num_students = rand(30, 50);
+        // Số sinh viên trong mỗi lớp (đã xác định bằng hằng số STUDENTS_PER_CLASS)
+        $num_students = STUDENTS_PER_CLASS;
 
         for ($j = 1; $j <= $num_students; $j++) {
             // Tạo thông tin sinh viên ngẫu nhiên
             $ten = generateRandomName();
+            // Lớp học ID ngẫu nhiên từ 1 đến 10
             $idLopHoc = rand(1, 10);
             $ngay_sinh = date('Y-m-d', strtotime("-" . rand(18, 28) . " years", strtotime($year . "-01-01")));
             $gioi_tinh = rand(0, 1) ? 'Nam' : 'Nữ';
@@ -61,6 +61,7 @@ for ($year = 2000; $year <= 2023; $year++) {
             $diem_thi_dau_vao = $diem_thi + $diem_khu_vuc;
 
             // Chọn ngẫu nhiên một quê quán từ danh sách
+            $addresses = array("Ha Noi", "Ho Chi Minh", "Da Nang", "Hue", "Can Tho", "Hai Phong", "Nha Trang", "Vung Tau", "Ha Noi", "Hai Phong", "Quang Ninh", "Lao Cai", "Lai Chau", "Yen Bai", "Dien Bien", "Son La", "Hoa Binh", "Ha Giang", "Cao Bang", "Bac Kan", "Lang Son", "Tuyen Quang", "Thai Nguyen", "Phu Tho", "Bac Giang", "Quang Ninh", "Bac Ninh", "Ha Nam", "Hai Duong", "Hung Yen", "Nam Dinh", "Thai Binh", "Vinh Phuc", "Nghe An", "Thanh Hoa", "Ha Tinh", "Quang Binh", "Quang Tri", "Thua Thien Hue", "Quang Nam", "Quang Ngai", "Binh Dinh", "Phu Yen", "Khanh Hoa", "Ninh Thuan", "Binh Thuan", "Kon Tum", "Gia Lai", "Dak Lak", "Dak Nong", "Lam Dong", " Da Nang", "Binh Duong", "Binh Phuoc", "Tay Ninh", "Ba Ria – Vung Tau", "Dong Nai", "Long An", "Tien Giang", "Ben Tre", "Vinh Long", "Tra Vinh", "Dong Thap", "Hau Giang", "An Giang", "Kien Giang", "Bac Lieu", "Soc Trang", "Ca Mau");
             $que_quan = $addresses[array_rand($addresses)];
 
             // Thêm thông tin sinh viên

@@ -137,6 +137,18 @@ if ($total_pages <= $range) {
     }
 }
 
+if (isset($_GET['delete_all'])) {
+  $sql_delete_all = "TRUNCATE TABLE sinhvien";
+  if ($connection->query($sql_delete_all) === TRUE) {
+      // Xóa thành công, chuyển hướng người dùng đến trang hiện tại
+      header("Location: " . $_SERVER['PHP_SELF']);
+      exit();
+  } else {
+      // Nếu có lỗi xảy ra trong quá trình xóa, hiển thị thông báo lỗi
+      echo "Error deleting record: " . $connection->error;
+  }
+}
+
 ?>
 
   <div class="container-lg mt-4">

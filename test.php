@@ -191,7 +191,6 @@ if ($total_pages <= $range) {
                 <label for="diem_thi">Chọn điểm thi:</label>
                 <input type="range" class="form-range" min="0" max="10" step="0.5" id="diem_thi" name="diem_thi">
               </div>
-
             </div>
           </div>
           <div class="row mb-3">
@@ -217,9 +216,11 @@ if ($total_pages <= $range) {
             <div class="col-md-4">
               <form id="myForm">
                 <div class="form-group">
-                  <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
-                    style="width: 100px">
-                  <button type="submit" class="btn btn-primary">Add</button>
+                  <!-- <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
+                    style="width: 100px"> -->
+                  <button type="submit" class="btn btn-primary">
+
+                  </button>
                 </div>
               </form>
             </div>
