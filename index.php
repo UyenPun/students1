@@ -332,29 +332,34 @@ if (isset($_GET['delete_all'])) {
 
                 // Hiển thị các liên kết phân trang với các tham số lọc
                 for ($page = $min; $page <= $max; $page++) {
-                    echo "<a href='?page=$page&$filter_params' class='btn btn-primary'>$page</a> ";
+                    echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
                 }
                 ?>
         </div> -->
 
         <div class="text-center">
           <?php
-    // Hiển thị nút điều hướng trái nếu không phải là trang đầu tiên
-    if ($min > 1) {
-        echo "<a href='?page=" . ($min - 1) . "&$filter_params' class='btn btn-primary'>←</a> ";
-    }
+          // Lấy các tham số lọc từ URL
+          $filter_params = http_build_query($_GET);
 
-    // Hiển thị các liên kết phân trang với các tham số lọc
-    for ($page = $min; $page <= $max; $page++) {
-        echo "<a href='?page=$page&$filter_params' class='btn btn-primary'>$page</a> ";
-    }
+          // Hiển thị nút điều hướng trái nếu không phải là trang đầu tiên
+          if ($min > 1) {
+              echo "<a href='?page=" . ($min - 1) . "&$filter_params' class='btn btn-primary'>←</a> ";
+          }
 
-    // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
-    if ($max < $total_pages) {
-        echo "<a href='?page=" . ($max + 1) . "&$filter_params' class='btn btn-primary'>→</a> ";
-    }
-    ?>
+          // Hiển thị các liên kết phân trang với các tham số lọc
+          for ($page = $min; $page <= $max; $page++) {
+              echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
+          }
+
+          // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
+          if ($max < $total_pages) {
+              echo "<a href='?page=" . ($max + 1) . "&$filter_params' class='btn btn-primary'>→</a> ";
+          }
+          ?>
         </div>
+
+
 
       </div>
     </div>

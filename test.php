@@ -137,6 +137,18 @@ if ($total_pages <= $range) {
     }
 }
 
+if (isset($_GET['delete_all'])) {
+  $sql_delete_all = "TRUNCATE TABLE sinhvien";
+  if ($connection->query($sql_delete_all) === TRUE) {
+      // Xóa thành công, chuyển hướng người dùng đến trang hiện tại
+      header("Location: " . $_SERVER['PHP_SELF']);
+      exit();
+  } else {
+      // Nếu có lỗi xảy ra trong quá trình xóa, hiển thị thông báo lỗi
+      echo "Error deleting record: " . $connection->error;
+  }
+}
+
 ?>
 
   <div class="container-lg mt-4">
@@ -191,6 +203,7 @@ if ($total_pages <= $range) {
                 <label for="diem_thi">Chọn điểm thi:</label>
                 <input type="range" class="form-range" min="0" max="10" step="0.5" id="diem_thi" name="diem_thi">
               </div>
+
             </div>
           </div>
           <div class="row mb-3">
@@ -216,11 +229,9 @@ if ($total_pages <= $range) {
             <div class="col-md-4">
               <form id="myForm">
                 <div class="form-group">
-                  <!-- <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
-                    style="width: 100px"> -->
-                  <button type="submit" class="btn btn-primary">
-
-                  </button>
+                  <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
+                    style="width: 100px">
+                  <button type="submit" class="btn btn-primary">Add</button>
                 </div>
               </form>
             </div>
@@ -321,29 +332,34 @@ if ($total_pages <= $range) {
 
                 // Hiển thị các liên kết phân trang với các tham số lọc
                 for ($page = $min; $page <= $max; $page++) {
-                    echo "<a href='?page=$page&$filter_params' class='btn btn-primary'>$page</a> ";
+                    echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
                 }
                 ?>
         </div> -->
 
         <div class="text-center">
           <?php
-    // Hiển thị nút điều hướng trái nếu không phải là trang đầu tiên
-    if ($min > 1) {
-        echo "<a href='?page=" . ($min - 1) . "&$filter_params' class='btn btn-primary'>←</a> ";
-    }
+          // Lấy các tham số lọc từ URL
+          $filter_params = http_build_query($_GET);
 
-    // Hiển thị các liên kết phân trang với các tham số lọc
-    for ($page = $min; $page <= $max; $page++) {
-        echo "<a href='?page=$page&$filter_params' class='btn btn-primary'>$page</a> ";
-    }
+          // Hiển thị nút điều hướng trái nếu không phải là trang đầu tiên
+          if ($min > 1) {
+              echo "<a href='?page=" . ($min - 1) . "&$filter_params' class='btn btn-primary'>←</a> ";
+          }
 
-    // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
-    if ($max < $total_pages) {
-        echo "<a href='?page=" . ($max + 1) . "&$filter_params' class='btn btn-primary'>→</a> ";
-    }
-    ?>
+          // Hiển thị các liên kết phân trang với các tham số lọc
+          for ($page = $min; $page <= $max; $page++) {
+              echo "<a href='?page=$page' class='btn btn-primary'>$page</a> ";
+          }
+
+          // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
+          if ($max < $total_pages) {
+              echo "<a href='?page=" . ($max + 1) . "&$filter_params' class='btn btn-primary'>→</a> ";
+          }
+          ?>
         </div>
+
+
 
       </div>
     </div>
