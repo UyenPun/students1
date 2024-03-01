@@ -229,9 +229,11 @@ if (isset($_GET['delete_all'])) {
             <div class="col-md-4">
               <form id="myForm">
                 <div class="form-group">
-                  <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
-                    style="width: 100px">
-                  <button type="submit" class="btn btn-primary">Add</button>
+                  <!-- <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
+                    style="width: 100px"> -->
+                  <button type="submit" class="btn btn-primary">
+                    <a href="http://localhost/student1/generate_data.php" target="_blank">Add Auto</a>
+                  </button>
                 </div>
               </form>
             </div>

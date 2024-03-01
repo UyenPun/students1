@@ -23,7 +23,9 @@ function generateRandomName()
     return $ten[array_rand($ten)];
 }
 
-// Tạo thông tin khóa học, lớp, và sinh viên
+// Mảng chứa tên của các lớp học
+$class_names = array("A1", "A2", "A3", "B1", "B2", "C1", "D1", "E1", "F1", "G1");
+
 for ($year = 2000; $year <= 2023; $year++) {
     // Thêm thông tin khóa học
     $sql_insert_khoa_hoc = "INSERT INTO khoahoc (namBatDau) VALUES ('$year')";
@@ -35,9 +37,20 @@ for ($year = 2000; $year <= 2023; $year++) {
     // Số lớp trong mỗi khóa (từ 2 đến 5)
     $num_classes = rand(2, 5);
 
+    // Khởi tạo mảng mới chứa tên của các lớp học
+    $remaining_class_names = $class_names;
+
     for ($i = 1; $i <= $num_classes; $i++) {
+        // Chọn ngẫu nhiên tên lớp học từ mảng
+        $class_index = array_rand($remaining_class_names);
+        $class_name = $remaining_class_names[$class_index];
+
+        // Loại bỏ tên lớp đã chọn để không lặp lại
+        unset($remaining_class_names[$class_index]);
+        // Sau đó bạn có thể tạo một mảng mới chỉ chứa các lớp còn lại
+        $remaining_class_names = array_values($remaining_class_names);
+
         // Thêm thông tin lớp học
-        $class_name = "Lớp " . chr(64 + $i);
         $sql_insert_lop_hoc = "INSERT INTO lophoc (idKhoaHoc, tenLop) VALUES ('$khoa_hoc_id', '$class_name')";
         $connection->query($sql_insert_lop_hoc);
 
