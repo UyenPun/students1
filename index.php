@@ -76,6 +76,78 @@
   .form-group {
     display: flex;
   }
+
+  /* chọn điểm thi: */
+  .range-slide {
+    position: relative;
+    margin: 40px;
+    height: 4px;
+    width: 240px;
+  }
+
+  .slide {
+    position: absolute;
+    top: 0;
+    height: 4px;
+    background: #ccc;
+    left: 9px;
+    right: 9px;
+  }
+
+  .line {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 4px;
+    background-color: red;
+  }
+
+  .thumb {
+    position: absolute;
+    z-index: 2;
+    text-align: left;
+    border: 1px solid red;
+    background-color: yellow;
+    border-radius: 50%;
+    outline: none;
+    top: -7px;
+    height: 18px;
+    width: 18px;
+    margin-left: -9px;
+  }
+
+  input {
+    -webkit-appearance: none;
+    appearance: none;
+    position: absolute;
+    pointer-events: none;
+    z-index: 3;
+    height: 3px;
+    top: 0;
+    width: 100%;
+    opacity: 0;
+    margin: 0;
+  }
+
+  input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    pointer-events: all;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
+
+  .display {
+    margin: 40px;
+    width: 240px;
+    display: flex;
+    justify-content: space-between;
+    margin-left: -280px;
+    margin-top: 10px
+  }
   </style>
 </head>
 
@@ -209,12 +281,18 @@ if (isset($_GET['delete_all'])) {
                 <!-- Có thể thêm tùy chọn "Khác" nếu cần -->
               </select>
             </div>
-            <div class="col-md-3">
-              <div class="col-md-3">
-                <label for="diem_thi">Chọn điểm thi:</label>
-                <input type="range" class="form-range" min="0" max="10" step="0.5" id="diem_thi" name="diem_thi">
+            <div class="range-slide">
+              <div class="slide">
+                <div class="line" id="line" style="left: 0%; right: 0%;"></div>
+                <span class="thumb" id="thumbMin" style="left: 0%;"></span>
+                <span class="thumb" id="thumbMax" style="left: 100%;"></span>
               </div>
-
+              <input id="rangeMin" type="range" max="10" min="0" step="1" value="0">
+              <input id="rangeMax" type="range" max="10" min="0" step="1" value="10">
+            </div>
+            <div class="display">
+              <span id="min">0</span>
+              <span id="max">10</span>
             </div>
           </div>
           <div class="row mb-3">
@@ -367,6 +445,7 @@ if (isset($_GET['delete_all'])) {
   </div>
   <!-- Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
   <script>
   // Lắng nghe sự kiện khi chọn option trong select "Chọn khóa học"
   document.getElementById('khoa_hoc_select').addEventListener('change', function() {
@@ -374,6 +453,36 @@ if (isset($_GET['delete_all'])) {
     var selectedYear = this.value;
     // Đặt giá trị của select "Năm bắt đầu" thành giá trị đã chọn
     document.getElementsByName('nam_bat_dau')[0].value = selectedYear;
+  });
+
+  // chọn điểm thi:
+  let min = 0;
+  let max = 10;
+
+  const calcLeftPosition = value => 100 / 10 * value;
+
+  $('#rangeMin').on('input', function(e) {
+    const newValue = parseInt(e.target.value);
+    if (newValue > max) return;
+    min = newValue;
+    $('#thumbMin').css('left', calcLeftPosition(newValue) + '%');
+    $('#min').html(newValue);
+    $('#line').css({
+      'left': calcLeftPosition(newValue) + '%',
+      'right': (100 - calcLeftPosition(max)) + '%'
+    });
+  });
+
+  $('#rangeMax').on('input', function(e) {
+    const newValue = parseInt(e.target.value);
+    if (newValue < min) return;
+    max = newValue;
+    $('#thumbMax').css('left', calcLeftPosition(newValue) + '%');
+    $('#max').html(newValue);
+    $('#line').css({
+      'left': calcLeftPosition(min) + '%',
+      'right': (100 - calcLeftPosition(newValue)) + '%'
+    });
   });
   </script>
 </body>

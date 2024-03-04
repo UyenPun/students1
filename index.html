@@ -1,16 +1,134 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Tính điểm thi đầu vào</title>
-</head>
-<body>
-    <h2>Nhập điểm thi và điểm khu vực</h2>
-    <form action="http://localhost/student1/process.php" method="post">
-        Điểm thi: <input type="text" name="diem_thi"><br>
-        Điểm khu vực: <input type="text" name="diem_khu_vuc"><br>
-        <input type="submit" value="Tính điểm">
-    </form>
+<html lang="en">
 
-    <a href="http://localhost/student1/generate_data.php" target="_blank">Add Auto</a>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Range Slider Example</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .range-slide {
+            position: relative;
+            margin: 40px;
+            height: 4px;
+            width: 240px;
+        }
+
+        .slide {
+            position: absolute;
+            top: 0;
+            height: 4px;
+            background: #ccc;
+            left: 9px;
+            right: 9px;
+        }
+
+        .line {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: 0;
+            height: 4px;
+            background-color: red;
+        }
+
+        .thumb {
+            position: absolute;
+            z-index: 2;
+            text-align: left;
+            border: 1px solid red;
+            background-color: #4ee44e;
+            border-radius: 50%;
+            outline: none;
+            top: -7px;
+            height: 18px;
+            width: 18px;
+            margin-left: -9px;
+        }
+
+        input {
+            -webkit-appearance: none;
+            appearance: none;
+            position: absolute;
+            pointer-events: none;
+            z-index: 3;
+            height: 3px;
+            top: 0;
+            width: 100%;
+            opacity: 0;
+            margin: 0;
+        }
+
+        input::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            pointer-events: all;
+            border-radius: 50%;
+            cursor: pointer;
+            width: 18px;
+            height: 18px;
+        }
+
+        .display {
+            margin: 40px;
+            width: 240px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="range-slide">
+        <div class="slide">
+            <div class="line" id="line" style="left: 0%; right: 0%;"></div>
+            <span class="thumb" id="thumbMin" style="left: 0%;"></span>
+            <span class="thumb" id="thumbMax" style="left: 100%;"></span>
+        </div>
+        <input id="rangeMin" type="range" max="100" min="10" step="5" value="0">
+        <input id="rangeMax" type="range" max="100" min="10" step="5" value="100">
+    </div>
+    <div class="display">
+        <span id="min">10</span>
+        <span id="max">100</span>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script>
+        let min = 10;
+        let max = 100;
+
+        const calcLeftPosition = value => 100 / (100 - 10) * (value - 10);
+
+        $('#rangeMin').on('input', function (e) {
+            const newValue = parseInt(e.target.value);
+            if (newValue > max) return;
+            min = newValue;
+            $('#thumbMin').css('left', calcLeftPosition(newValue) + '%');
+            $('#min').html(newValue);
+            $('#line').css({
+                'left': calcLeftPosition(newValue) + '%',
+                'right': (100 - calcLeftPosition(max)) + '%'
+            });
+        });
+
+        $('#rangeMax').on('input', function (e) {
+            const newValue = parseInt(e.target.value);
+            if (newValue < min) return;
+            max = newValue;
+            $('#thumbMax').css('left', calcLeftPosition(newValue) + '%');
+            $('#max').html(newValue);
+            $('#line').css({
+                'left': calcLeftPosition(min) + '%',
+                'right': (100 - calcLeftPosition(newValue)) + '%'
+            });
+        });
+    </script>
 </body>
+
 </html>
