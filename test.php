@@ -294,8 +294,8 @@ if (isset($_GET['delete_all'])) {
                 <span class="thumb" id="thumbMin" style="left: 0%;"></span>
                 <span class="thumb" id="thumbMax" style="left: 100%;"></span>
               </div>
-              <input id="rangeMin" type="range" max="10" min="0" step="1" value="0">
-              <input id="rangeMax" type="range" max="10" min="0" step="1" value="10">
+              <input id="rangeMin" type="range" max="10" min="0" step="1" value="0" name="min">
+              <input id="rangeMax" type="range" max="10" min="0" step="1" value="10" name="max">
             </div>
             <div class="display">
               <span id="min">0</span>
@@ -384,6 +384,17 @@ if (isset($_GET['delete_all'])) {
                 }
                 $filter_condition .= "sinhvien.gioiTinh = '$filter_gender'";
             }
+            if (!empty($_GET['min']) && !empty($_GET['max'])) {
+              $filter_conditions[] = "sinhvien.diemThiDauVao BETWEEN {$_GET['min']} AND {$_GET['max']}";
+          }
+
+             // Xác định điều kiện lọc dựa trên khoảng giá trị từ thanh trượt
+            $filter_min = isset($_GET['min']) ? $_GET['min'] : 0;
+            $filter_max = isset($_GET['max']) ? $_GET['max'] : 10;
+
+            // Thêm điều kiện lọc vào câu truy vấn SQL
+            $filter_condition .= " AND sinhvien.diemThiDauVao BETWEEN $filter_min AND $filter_max";
+
 
                     // Cập nhật câu truy vấn SQL để áp dụng bộ lọc
                     $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
@@ -517,6 +528,19 @@ if (isset($_GET['delete_all'])) {
 
     // Hiển thị khoảng giá trị được chọn
     console.log("Khoảng giá trị được chọn: " + minValue + " đến " + maxValue);
+  });
+
+
+  // JavaScript code
+  // Lắng nghe sự kiện khi giá trị thanh trượt thay đổi
+  $('#rangeMin, #rangeMax').on('input', function(e) {
+    // Lấy giá trị tối thiểu và tối đa từ thanh trượt
+    var minValue = parseInt($('#rangeMin').val());
+    var maxValue = parseInt($('#rangeMax').val());
+
+    // Hiển thị giá trị tối thiểu và tối đa
+    $('#min').html(minValue);
+    $('#max').html(maxValue);
   });
   </script>
 </body>
