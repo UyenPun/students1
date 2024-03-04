@@ -148,6 +148,10 @@
     margin-left: -280px;
     margin-top: 10px
   }
+
+  .diemThiDauVao {
+    margin-top: 10px;
+  }
   </style>
 </head>
 
@@ -280,6 +284,9 @@ if (isset($_GET['delete_all'])) {
                 <option>Nữ</option>
                 <!-- Có thể thêm tùy chọn "Khác" nếu cần -->
               </select>
+            </div>
+            <div class="diemThiDauVao">
+              <label for="diemThiDauVao">Chọn điểm thi: </label>
             </div>
             <div class="range-slide">
               <div class="slide">
@@ -483,6 +490,33 @@ if (isset($_GET['delete_all'])) {
       'left': calcLeftPosition(min) + '%',
       'right': (100 - calcLeftPosition(newValue)) + '%'
     });
+  });
+
+  // thử lấy giá trị thumb:
+  // Lấy các phần tử thanh trượt
+  var rangeMin = document.getElementById("rangeMin");
+  var rangeMax = document.getElementById("rangeMax");
+
+  // Lắng nghe sự kiện input trên thanh trượt tối thiểu
+  rangeMin.addEventListener("input", function() {
+    // Lấy giá trị tối thiểu
+    var minValue = rangeMin.value;
+    // Lấy giá trị tối đa
+    var maxValue = rangeMax.value;
+
+    // Hiển thị khoảng giá trị được chọn
+    console.log("Khoảng giá trị được chọn: " + minValue + " đến " + maxValue);
+  });
+
+  // Lắng nghe sự kiện input trên thanh trượt tối đa
+  rangeMax.addEventListener("input", function() {
+    // Lấy giá trị tối thiểu
+    var minValue = rangeMin.value;
+    // Lấy giá trị tối đa
+    var maxValue = rangeMax.value;
+
+    // Hiển thị khoảng giá trị được chọn
+    console.log("Khoảng giá trị được chọn: " + minValue + " đến " + maxValue);
   });
   </script>
 </body>
