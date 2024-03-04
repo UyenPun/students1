@@ -176,18 +176,29 @@ if (isset($_GET['delete_all'])) {
                 <option selected disabled>Chọn lớp học</option>
                 <!-- Truy vấn cơ sở dữ liệu để lấy tên các lớp học -->
                 <?php
-                            $sql_lop = "SELECT * FROM lophoc";
-                            $result_lop = $connection->query($sql_lop);
+                  // Khởi tạo một mảng để lưu trữ danh sách các lớp học đã lấy
+                  $classes = array();
 
-                            // Kiểm tra kết quả và tạo các option cho select
-                            if ($result_lop->num_rows > 0) {
-                                while ($row_lop = $result_lop->fetch_assoc()) {
-                                    echo "<option value='" . $row_lop['id'] . "'>" . $row_lop['tenLop'] . "</option>";
-                                }
-                            } else {
-                                echo "<option disabled>Không có lớp học</option>";
-                            }
-                            ?>
+                  // Truy vấn cơ sở dữ liệu để lấy tên các lớp học theo thứ tự alphabet
+                  $sql_lop = "SELECT * FROM lophoc ORDER BY tenLop ASC";
+                  $result_lop = $connection->query($sql_lop);
+
+                  // Kiểm tra kết quả và tạo các option cho select
+                  if ($result_lop->num_rows > 0) {
+                      while ($row_lop = $result_lop->fetch_assoc()) {
+                          // Kiểm tra xem lớp học đã tồn tại trong mảng $classes chưa
+                          if (!in_array($row_lop['tenLop'], $classes)) {
+                              echo "<option value='" . $row_lop['id'] . "'>" . $row_lop['tenLop'] . "</option>";
+                              // Thêm tên lớp học vào mảng $classes
+                              $classes[] = $row_lop['tenLop'];
+                          }
+                      }
+                  } else {
+                      echo "<option disabled>Không có lớp học</option>";
+                  }
+                ?>
+
+
               </select>
             </div>
             <div class="col-md-3">
