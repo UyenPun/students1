@@ -273,42 +273,42 @@ if (isset($_GET['delete_all'])) {
             </thead>
             <tbody>
               <?php
-                    // Xác định điều kiện lọc
-                    $filter_year = isset($_GET['nam_bat_dau']) ? $_GET['nam_bat_dau'] : '';
-                    $filter_class = isset($_GET['lop_hoc']) ? $_GET['lop_hoc'] : '';
-                    $filter_gender = isset($_GET['gioi_tinh']) ? $_GET['gioi_tinh'] : '';
+              // Xác định điều kiện lọc
+              $filter_year = isset($_GET['nam_bat_dau']) ? $_GET['nam_bat_dau'] : '';
+              $filter_class = isset($_GET['lop_hoc']) ? $_GET['lop_hoc'] : '';
+              $filter_gender = isset($_GET['gioi_tinh']) ? $_GET['gioi_tinh'] : '';
 
-                    // Thêm điều kiện lọc vào câu truy vấn SQL nếu có
-                    $filter_condition = "";
-                    if (!empty($filter_year)) {
-                        $filter_condition = " WHERE khoahoc.namBatDau = '$filter_year'";
-                    }
-                    if (!empty($filter_class)) {
-                        if (!empty($filter_condition)) {
-                            $filter_condition .= " AND ";
-                        } else {
-                            $filter_condition = " WHERE ";
-                        }
-                        $filter_condition .= "lophoc.id = '$filter_class'";
-                    }
-                    if (!empty($filter_gender)) {
-                        if (!empty($filter_condition)) {
-                            $filter_condition .= " AND ";
-                        } else {
-                            $filter_condition = " WHERE ";
-                        }
-                        $filter_condition .= "sinhvien.gioiTinh = '$filter_gender'";
-                    }
+            // Thêm điều kiện lọc vào câu truy vấn SQL nếu có
+            $filter_condition = "";
+            if (!empty($filter_year)) {
+                $filter_condition = " WHERE khoahoc.namBatDau = '$filter_year'";
+            }
+            if (!empty($filter_class)) {
+                if (!empty($filter_condition)) {
+                    $filter_condition .= " AND ";
+                } else {
+                    $filter_condition = " WHERE ";
+                }
+                $filter_condition .= "lophoc.id = '$filter_class'";
+            }
+            if (!empty($filter_gender)) {
+                if (!empty($filter_condition)) {
+                    $filter_condition .= " AND ";
+                } else {
+                    $filter_condition = " WHERE ";
+                }
+                $filter_condition .= "sinhvien.gioiTinh = '$filter_gender'";
+            }
 
                     // Cập nhật câu truy vấn SQL để áp dụng bộ lọc
                     $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
-                                    sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
-                                    sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
-                                    FROM sinhvien
-                                    JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
-                                    JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
-                                    $filter_condition
-                                    LIMIT $start_index, $results_per_page";
+                    sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,
+                    sinhvien.diemThiDauVao, lophoc.tenLop, khoahoc.namBatDau, lophoc.id AS lophoc_id
+                    FROM sinhvien
+                    JOIN lophoc ON sinhvien.idLopHoc = lophoc.id
+                    JOIN khoahoc ON lophoc.idKhoaHoc = khoahoc.id
+                    $filter_condition
+                    LIMIT $start_index, $results_per_page";
                     $result = $connection->query($sql);
 
                     if ($result->num_rows > 0) {
