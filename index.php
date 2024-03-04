@@ -146,11 +146,25 @@
     display: flex;
     justify-content: space-between;
     margin-left: -280px;
-    margin-top: 10px
+    margin-top: -7px
   }
 
   .diemThiDauVao {
     margin-top: 10px;
+  }
+
+  .pie a {
+    background-color: #007bff;
+    color: red;
+  }
+
+  .col-md-3 {
+    width: 20%;
+  }
+
+  .range-slide {
+    margin-left: 900px;
+    margin-top: -18px;
   }
   </style>
 </head>
@@ -224,7 +238,6 @@ if (isset($_GET['delete_all'])) {
       echo "Error deleting record: " . $connection->error;
   }
 }
-
 ?>
 
   <div class="container-lg mt-4">
@@ -273,8 +286,6 @@ if (isset($_GET['delete_all'])) {
                       echo "<option disabled>Không có lớp học</option>";
                   }
                 ?>
-
-
               </select>
             </div>
             <div class="col-md-3">
@@ -285,7 +296,7 @@ if (isset($_GET['delete_all'])) {
                 <!-- Có thể thêm tùy chọn "Khác" nếu cần -->
               </select>
             </div>
-            <div class="diemThiDauVao">
+            <div class="diemThiDauVao col-md-3">
               <label for="diemThiDauVao">Chọn điểm thi: </label>
             </div>
             <div class="range-slide">
@@ -316,13 +327,13 @@ if (isset($_GET['delete_all'])) {
             </div>
           </div>
           <div class="row">
-            <div class="col-md-4">
+            <div class="col-md-3">
               <button type="submit" class="btn btn-primary">Lọc</button>
               <button type="submit" class="btn btn-primary">
                 <a href="http://localhost/student1/index.php">Reset</a>
               </button>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <form id="myForm">
                 <div class="form-group">
                   <!-- <input type="number" class="form-control" id="quantity" placeholder="Nhập số lượng"
@@ -333,10 +344,22 @@ if (isset($_GET['delete_all'])) {
                 </div>
               </form>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-3">
               <a href="?delete_all=true" class="btn btn-primary custom-gradient-4 ms-2" role="button">Delete All</a>
             </div>
+            <!-- Thêm 2 nút button mới -->
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary">
+                <a href="http://localhost/student1/pie_gt.php" target="_blank">Pie gioiTinh</a>
+              </button>
+            </div>
+            <div class="col-md-3">
+              <button type="submit" class="btn btn-primary">
+                <a href="http://localhost/student1/pie_quequan.php" target="_blank">Pie queQuan</a>
+              </button>
+            </div>
           </div>
+
         </form>
         <div class="table-responsive mt-4">
           <table class="table table-bordered table-striped">
@@ -394,8 +417,6 @@ if (isset($_GET['delete_all'])) {
 
             // Thêm điều kiện lọc vào câu truy vấn SQL
             $filter_condition .= " AND sinhvien.diemThiDauVao BETWEEN $filter_min AND $filter_max";
-
-
                     // Cập nhật câu truy vấn SQL để áp dụng bộ lọc
                     $sql = "SELECT sinhvien.id AS sinhvien_id, sinhvien.ten AS sinhvien_ten, sinhvien.ngaySinh,
                     sinhvien.gioiTinh, sinhvien.chieuCao, sinhvien.canNang, sinhvien.queQuan,

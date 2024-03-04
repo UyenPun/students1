@@ -26,6 +26,8 @@ function generateRandomName()
 // Mảng chứa tên của các lớp học
 $class_names = array("A1", "A2", "A3", "B1", "B2", "C1", "D1", "E1", "F1", "G1");
 
+echo "Đang thêm dữ liệu vào cơ sở dữ liệu...<br>";
+
 for ($year = 2000; $year <= 2023; $year++) {
     // Thêm thông tin khóa học
     $sql_insert_khoa_hoc = "INSERT INTO khoahoc (namBatDau) VALUES ('$year')";
