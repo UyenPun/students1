@@ -258,7 +258,6 @@ if (isset($_GET['delete_all'])) {
               <label for="">Chọn giới tính</label>
             </div>
           </div>
-
           <!-- row 2 -->
           <div class="row mb-3">
             <div class="col-md-3">
@@ -444,7 +443,7 @@ if (isset($_GET['delete_all'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "
                                     <tr>
-                                        <td>{$row['sinhvien_ten']}</td>
+~                                        <td>{$row['sinhvien_ten']}</td>
                                         <td>{$row['ngaySinh']}</td>
                                         <td>{$row['gioiTinh']}</td>
                                         <td>{$row['chieuCao']}</td>
