@@ -377,6 +377,7 @@ if (isset($_GET['delete_all'])) {
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
+                <th>STT</th>
                 <th>Tên</th>
                 <th>Ngày sinh</th>
                 <th>Giới tính</th>
@@ -438,12 +439,17 @@ if (isset($_GET['delete_all'])) {
                     LIMIT $start_index, $results_per_page";
                     $result = $connection->query($sql);
 
+
+                    // Khởi tạo biến đếm
+                    $stt = ($page - 1) * $results_per_page + 1;
+
                     if ($result->num_rows > 0) {
                         // Đọc dữ liệu của mỗi hàng
                         while ($row = $result->fetch_assoc()) {
                             echo "
                                     <tr>
-~                                        <td>{$row['sinhvien_ten']}</td>
+                                        <td>$stt</td>
+                                        <td>{$row['sinhvien_ten']}</td>
                                         <td>{$row['ngaySinh']}</td>
                                         <td>{$row['gioiTinh']}</td>
                                         <td>{$row['chieuCao']}</td>
@@ -454,6 +460,8 @@ if (isset($_GET['delete_all'])) {
                                         <td>{$row['namBatDau']}</td>
                                     </tr>
                                     ";
+                                    // Tăng biến đếm lên 1
+                                    $stt++;
                         }
                     } else {
                         echo "<tr><td colspan='11'>No data available</td></tr>";
@@ -484,6 +492,19 @@ if (isset($_GET['delete_all'])) {
           if ($max < $total_pages) {
               echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
           }
+
+          //
+          // Tính toán trang cuối cùng
+$last_page = $total_pages;
+
+// Hiển thị liên kết đến trang cuối cùng
+echo "<a href='?" . $filter_params . "&page=$last_page' class='btn btn-primary'>Cuối</a> ";
+
+// Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
+// if ($max < $total_pages) {
+//     echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
+// }
+
           ?>
         </div>
 
