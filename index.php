@@ -249,6 +249,19 @@ if (isset($_GET['delete_all'])) {
         <form>
           <div class="row mb-3">
             <div class="col-md-3">
+              <label for="">Chọn khóa học</label>
+            </div>
+            <div class="col-md-3">
+              <label for="">Chọn lớp học</label>
+            </div>
+            <div class="col-md-3">
+              <label for="">Chọn giới tính</label>
+            </div>
+          </div>
+
+          <!-- row 2 -->
+          <div class="row mb-3">
+            <div class="col-md-3">
               <select class="form-select" id="khoa_hoc_select">
                 <option selected disabled>Chọn khóa học</option>
                 <?php
@@ -365,8 +378,6 @@ if (isset($_GET['delete_all'])) {
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>id</th>
-                <th>id_Class</th>
                 <th>Tên</th>
                 <th>Ngày sinh</th>
                 <th>Giới tính</th>
@@ -433,8 +444,6 @@ if (isset($_GET['delete_all'])) {
                         while ($row = $result->fetch_assoc()) {
                             echo "
                                     <tr>
-                                        <td>{$row['sinhvien_id']}</td>
-                                        <td>{$row['lophoc_id']}</td>
                                         <td>{$row['sinhvien_ten']}</td>
                                         <td>{$row['ngaySinh']}</td>
                                         <td>{$row['gioiTinh']}</td>
@@ -563,6 +572,34 @@ if (isset($_GET['delete_all'])) {
     $('#min').html(minValue);
     $('#max').html(maxValue);
   });
+
+  // Lắng nghe sự kiện khi nút Lọc được nhấn
+  document.querySelector('.btn-primary[type="submit"]').addEventListener('click', function(event) {
+    // Lấy giá trị của các select
+    var khoaHocSelect = document.getElementById('khoa_hoc_select').value;
+    var lopHocSelect = document.getElementById('lop_hoc_select').value;
+    var gioiTinhSelect = document.querySelector('select[name="gioi_tinh"]').value;
+    // Lưu trữ giá trị của các select vào localStorage
+    localStorage.setItem('khoaHocSelect', khoaHocSelect);
+    localStorage.setItem('lopHocSelect', lopHocSelect);
+    localStorage.setItem('gioiTinhSelect', gioiTinhSelect);
+  });
+
+  // Kiểm tra xem có giá trị đã lưu trong localStorage không
+  var savedKhoaHocSelect = localStorage.getItem('khoaHocSelect');
+  var savedLopHocSelect = localStorage.getItem('lopHocSelect');
+  var savedGioiTinhSelect = localStorage.getItem('gioiTinhSelect');
+
+  // Nếu có giá trị, đặt lại giá trị của các select
+  if (savedKhoaHocSelect) {
+    document.getElementById('khoa_hoc_select').value = savedKhoaHocSelect;
+  }
+  if (savedLopHocSelect) {
+    document.getElementById('lop_hoc_select').value = savedLopHocSelect;
+  }
+  if (savedGioiTinhSelect) {
+    document.querySelector('select[name="gioi_tinh"]').value = savedGioiTinhSelect;
+  }
   </script>
 </body>
 
