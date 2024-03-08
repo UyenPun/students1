@@ -261,7 +261,7 @@ if (isset($_GET['delete_all'])) {
           <!-- row 2 -->
           <div class="row mb-3">
             <div class="col-md-3">
-              <select class="form-select" id="khoa_hoc_select">
+              <select class="form-select" id="khoa_hoc_select" onchange="fetchClassesByYear()">
                 <option selected disabled>Chọn khóa học</option>
                 <?php
                             // Tạo dữ liệu cho các tùy chọn của khóa học với mỗi option đại diện cho một khoảng 4 năm
@@ -502,13 +502,13 @@ if (isset($_GET['delete_all'])) {
           // Tính toán trang cuối cùng
 $last_page = $total_pages;
 
-// Hiển thị liên kết đến trang cuối cùng
-echo "<a href='?" . $filter_params . "&page=$last_page' class='btn btn-primary'>Cuối</a> ";
+          // Hiển thị liên kết đến trang cuối cùng
+          echo "<a href='?" . $filter_params . "&page=$last_page' class='btn btn-primary'>Cuối</a> ";
 
-// Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
-// if ($max < $total_pages) {
-//     echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
-// }
+        // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
+        // if ($max < $total_pages) {
+        //     echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
+        // }
 
           ?>
         </div>
@@ -626,6 +626,30 @@ echo "<a href='?" . $filter_params . "&page=$last_page' class='btn btn-primary'>
     document.querySelector('select[name="gioi_tinh"]').value = savedGioiTinhSelect;
   }
   </script>
+
+  <!-- cập nhật select "Chọn lớp học": -->
+  <script>
+  function fetchClassesByYear() {
+    var selectedYear = document.getElementById('khoa_hoc_select').value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var classes = JSON.parse(this.responseText);
+        var selectLopHoc = document.getElementById('lop_hoc_select');
+        selectLopHoc.innerHTML = ''; // Xóa tất cả các tùy chọn hiện tại
+        classes.forEach(function(lop) {
+          var option = document.createElement('option');
+          option.text = lop.tenLop;
+          option.value = lop.id;
+          selectLopHoc.appendChild(option);
+        });
+      }
+    };
+    xhttp.open("GET", "fetch_classes.php?year=" + selectedYear, true);
+    xhttp.send();
+  }
+  </script>
+
 </body>
 
 </html>

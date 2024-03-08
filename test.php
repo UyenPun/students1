@@ -249,7 +249,19 @@ if (isset($_GET['delete_all'])) {
         <form>
           <div class="row mb-3">
             <div class="col-md-3">
-              <select class="form-select" id="khoa_hoc_select">
+              <label for="">Chọn khóa học</label>
+            </div>
+            <div class="col-md-3">
+              <label for="">Chọn lớp học</label>
+            </div>
+            <div class="col-md-3">
+              <label for="">Chọn giới tính</label>
+            </div>
+          </div>
+          <!-- row 2 -->
+          <div class="row mb-3">
+            <div class="col-md-3">
+              <select class="form-select" id="khoa_hoc_select" onchange="fetchClassesByYear()">
                 <option selected disabled>Chọn khóa học</option>
                 <?php
                             // Tạo dữ liệu cho các tùy chọn của khóa học với mỗi option đại diện cho một khoảng 4 năm
@@ -365,8 +377,7 @@ if (isset($_GET['delete_all'])) {
           <table class="table table-bordered table-striped">
             <thead>
               <tr>
-                <th>id</th>
-                <th>id_Class</th>
+                <th>STT</th>
                 <th>Tên</th>
                 <th>Ngày sinh</th>
                 <th>Giới tính</th>
@@ -433,13 +444,16 @@ if (isset($_GET['delete_all'])) {
                     LIMIT $start_index, $results_per_page";
                     $result = $connection->query($sql);
 
+
+                    // Khởi tạo biến đếm
+                    $stt = ($page - 1) * $results_per_page + 1;
+
                     if ($result->num_rows > 0) {
                         // Đọc dữ liệu của mỗi hàng
                         while ($row = $result->fetch_assoc()) {
                             echo "
                                     <tr>
-                                        <td>{$row['sinhvien_id']}</td>
-                                        <td>{$row['lophoc_id']}</td>
+                                        <td>$stt</td>
                                         <td>{$row['sinhvien_ten']}</td>
                                         <td>{$row['ngaySinh']}</td>
                                         <td>{$row['gioiTinh']}</td>
@@ -451,6 +465,8 @@ if (isset($_GET['delete_all'])) {
                                         <td>{$row['namBatDau']}</td>
                                     </tr>
                                     ";
+                                    // Tăng biến đếm lên 1
+                                    $stt++;
                         }
                     } else {
                         echo "<tr><td colspan='11'>No data available</td></tr>";
@@ -481,6 +497,19 @@ if (isset($_GET['delete_all'])) {
           if ($max < $total_pages) {
               echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
           }
+
+          //
+          // Tính toán trang cuối cùng
+$last_page = $total_pages;
+
+          // Hiển thị liên kết đến trang cuối cùng
+          echo "<a href='?" . $filter_params . "&page=$last_page' class='btn btn-primary'>Cuối</a> ";
+
+        // Hiển thị nút điều hướng phải nếu không phải là trang cuối cùng
+        // if ($max < $total_pages) {
+        //     echo "<a href='?" . $filter_params . "&page=" . ($max + 1) . "' class='btn btn-primary'>→</a> ";
+        // }
+
           ?>
         </div>
 
@@ -597,6 +626,30 @@ if (isset($_GET['delete_all'])) {
     document.querySelector('select[name="gioi_tinh"]').value = savedGioiTinhSelect;
   }
   </script>
+
+  <!-- cập nhật select "Chọn lớp học": -->
+  <script>
+  function fetchClassesByYear() {
+    var selectedYear = document.getElementById('khoa_hoc_select').value;
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+        var classes = JSON.parse(this.responseText);
+        var selectLopHoc = document.getElementById('lop_hoc_select');
+        selectLopHoc.innerHTML = ''; // Xóa tất cả các tùy chọn hiện tại
+        classes.forEach(function(lop) {
+          var option = document.createElement('option');
+          option.text = lop.tenLop;
+          option.value = lop.id;
+          selectLopHoc.appendChild(option);
+        });
+      }
+    };
+    xhttp.open("GET", "fetch_classes.php?year=" + selectedYear, true);
+    xhttp.send();
+  }
+  </script>
+
 </body>
 
 </html>
