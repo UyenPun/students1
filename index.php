@@ -400,8 +400,13 @@ if (isset($_GET['delete_all'])) {
             // Thêm điều kiện lọc vào câu truy vấn SQL nếu có
             $filter_condition = "";
             if (!empty($filter_year)) {
-                $filter_condition = " WHERE khoahoc.namBatDau = '$filter_year'";
-            }
+              if (!empty($filter_condition)) {
+                  $filter_condition .= " AND ";
+              } else {
+                  $filter_condition = " WHERE ";
+              }
+              $filter_condition .= "khoahoc.namBatDau = '$filter_year'";
+          }
             if (!empty($filter_class)) {
                 if (!empty($filter_condition)) {
                     $filter_condition .= " AND ";
